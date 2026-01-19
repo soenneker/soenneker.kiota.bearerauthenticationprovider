@@ -42,6 +42,6 @@
 
     <ItemGroup>
 
-        <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.21.1" />
+        <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.21.2" />
     </ItemGroup>
 </Project>
