@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Soenneker.Kiota.BearerAuthenticationProvider.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Kiota.BearerAuthenticationProvider\Soenneker.Kiota.BearerAuthenticationProvider.csproj" />
     </ItemGroup>
 
     <ItemGroup>
