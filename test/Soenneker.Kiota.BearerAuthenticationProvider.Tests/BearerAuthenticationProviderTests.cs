@@ -1,16 +1,15 @@
-﻿using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Kiota.BearerAuthenticationProvider.Tests;
 
-[Collection("Collection")]
-public class BearerAuthenticationProviderTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class BearerAuthenticationProviderTests : HostedUnitTest
 {
-    public BearerAuthenticationProviderTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public BearerAuthenticationProviderTests(Host host) : base(host)
     {
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
