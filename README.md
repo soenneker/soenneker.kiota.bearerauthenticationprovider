@@ -3,11 +3,16 @@
 [![](https://img.shields.io/nuget/dt/soenneker.kiota.bearerauthenticationprovider.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.kiota.bearerauthenticationprovider/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.kiota.bearerauthenticationprovider/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.kiota.bearerauthenticationprovider/actions/workflows/codeql.yml)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Kiota.BearerAuthenticationProvider
-### A Kiota AuthenticationProvider implementation that adds a Bearer token to the request's Authorization header.
+# Soenneker.Kiota.BearerAuthenticationProvider
 
-## Installation
+A Kiota `IAuthenticationProvider` implementation that adds a Bearer token to the request's Authorization header.
 
-```
+## Install
+
+```bash
 dotnet add package Soenneker.Kiota.BearerAuthenticationProvider
 ```
+
+## What you get
+
+- `BearerAuthenticationProvider` — A Kiota `IAuthenticationProvider` implementation that adds a Bearer token to the request's Authorization header.
