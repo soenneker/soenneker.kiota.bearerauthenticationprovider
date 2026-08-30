@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Authentication;
 
@@ -12,10 +14,30 @@ namespace Soenneker.Kiota.BearerAuthenticationProvider;
 public sealed class BearerAuthenticationProvider : IAuthenticationProvider
 {
     private readonly string _apiKey;
+    private readonly AllowedHostsValidator _allowedHostsValidator;
+    private readonly bool _allowInsecureHttp;
 
-    public BearerAuthenticationProvider(string apiKey)
+    /// <summary>Creates a provider that authenticates HTTPS requests to one host.</summary>
+    public BearerAuthenticationProvider(string apiKey, string allowedHost) : this(apiKey, new[] { allowedHost })
     {
+    }
+
+    /// <summary>Creates a provider restricted to the supplied hosts.</summary>
+    /// <param name="apiKey">The bearer token, without the scheme.</param>
+    /// <param name="allowedHosts">Host names that may receive the token.</param>
+    /// <param name="allowInsecureHttp">Whether plain HTTP requests to allowed hosts may receive the token.</param>
+    public BearerAuthenticationProvider(string apiKey, IEnumerable<string> allowedHosts, bool allowInsecureHttp = false)
+    {
+        if (string.IsNullOrWhiteSpace(apiKey))
+            throw new InvalidOperationException("A bearer token is required.");
+
+        string[] hosts = allowedHosts?.Where(static host => !string.IsNullOrWhiteSpace(host)).ToArray() ?? [];
+        if (hosts.Length == 0)
+            throw new InvalidOperationException("At least one allowed host is required.");
+
         _apiKey = apiKey;
+        _allowedHostsValidator = new AllowedHostsValidator(hosts);
+        _allowInsecureHttp = allowInsecureHttp;
     }
 
     /// <summary>
@@ -28,6 +50,15 @@ public sealed class BearerAuthenticationProvider : IAuthenticationProvider
     public Task AuthenticateRequestAsync(RequestInformation request, Dictionary<string, object>? additionalAuthenticationContext = null,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        request.Headers.Remove("Authorization");
+
+        Uri uri = request.URI;
+        bool transportAllowed = uri.Scheme == Uri.UriSchemeHttps || _allowInsecureHttp && uri.Scheme == Uri.UriSchemeHttp;
+
+        if (!transportAllowed || !_allowedHostsValidator.IsUrlHostValid(uri))
+            return Task.CompletedTask;
+
         request.Headers.Add("Authorization", $"Bearer {_apiKey}");
         return Task.CompletedTask;
     }
