@@ -21,7 +21,7 @@ public class BearerAuthenticationProviderTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Adds_token_only_for_allowed_https_hosts(CancellationToken cancellationToken)
+    public async ValueTask Adds_token_only_for_allowed_https_hosts(CancellationToken cancellationToken)
     {
         var provider = new BearerAuthenticationProvider("secret", "api.example.com");
         var request = new RequestInformation { URI = new System.Uri("https://api.example.com/v1/items") };
@@ -38,7 +38,7 @@ public class BearerAuthenticationProviderTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Does_not_send_token_over_plain_http_by_default(CancellationToken cancellationToken)
+    public async ValueTask Does_not_send_token_over_plain_http_by_default(CancellationToken cancellationToken)
     {
         var provider = new BearerAuthenticationProvider("secret", "api.example.com");
         var request = new RequestInformation { URI = new System.Uri("http://api.example.com/v1/items") };
